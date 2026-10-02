@@ -1,5 +1,4 @@
 name: Build and Release
-
 on:
   schedule:
     - cron: '0 18 * * 4'
@@ -13,7 +12,6 @@ on:
   #     - main
   #   tags:
   #     - '*'
-
 jobs:
   build:
     runs-on: ubuntu-24.04
@@ -64,6 +62,10 @@ jobs:
           cp lede/bin/targets/rockchip/armv8/profiles.json release_assets/ || true
           cp lede/bin/targets/rockchip/armv8/version.buildinfo release_assets/ || true
           cp lede/bin/targets/rockchip/armv8/sha256sums release_assets/ || true
+          # OAF三件套ipk复制到打包目录
+          cp lede/bin/packages/aarch64_generic/base/kmod-oaf*.ipk release_assets/ || true
+          cp lede/bin/packages/aarch64_generic/base/appfilter*.ipk release_assets/ || true
+          cp lede/bin/packages/aarch64_generic/luci/luci-app-oaf*.ipk release_assets/ || true
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -135,6 +137,9 @@ jobs:
           body_path: release_assets/openwrt-rockchip-armv8-widora_mangopi-m28c.manifest
           files: |
             release_assets/*.img.gz
+            release_assets/kmod-oaf*.ipk
+            release_assets/appfilter*.ipk
+            release_assets/luci-app-oaf*.ipk
             release_assets/openwrt-rockchip-armv8-widora_mangopi-m28c.manifest
             release_assets/config.buildinfo
             release_assets/feeds.buildinfo
