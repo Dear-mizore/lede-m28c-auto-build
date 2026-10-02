@@ -3,7 +3,6 @@ id
 df -h
 free -h
 cat /proc/cpuinfo
-
 if [ -d "lede" ]; then
     echo "repo dir exists"
     cd lede
@@ -13,7 +12,6 @@ else
     git clone "https://github.com/coolsnowwolf/lede.git" || { echo "git clone failed"; exit 1; }
     cd lede
 fi
-
 #cat ../m28c.config > .config
 cat feeds.conf.default > feeds.conf
 echo "" >> feeds.conf
@@ -26,4 +24,13 @@ if [ -d "package/zz/luci-theme-alpha" ]; then
     cd ../../..
 else
     git clone https://github.com/derisamedia/luci-theme-alpha.git package/zz/luci-theme-alpha || { echo "luci-theme-alpha git clone failed"; exit 1; }
+fi
+
+# 添加OpenAppFilter
+if [ -d "package/OpenAppFilter" ]; then
+    cd package/OpenAppFilter
+    git pull || { echo "OpenAppFilter git pull failed"; exit 1; }
+    cd ../../
+else
+    git clone https://github.com/destan19/OpenAppFilter.git package/OpenAppFilter || { echo "OpenAppFilter git clone failed"; exit 1; }
 fi
