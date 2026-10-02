@@ -40,6 +40,7 @@ jobs:
           sudo ./install-env.sh
       - name: Prepare
         run: |
+          chmod +x prepare.sh
           ./prepare.sh
       - name: Cache OpenWrt dl and toolchain
         uses: actions/cache@v3
