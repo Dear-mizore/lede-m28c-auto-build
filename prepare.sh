@@ -6,10 +6,13 @@ cat /proc/cpuinfo
 if [ -d "lede" ]; then
     echo "repo dir exists"
     cd lede
-    git pull || { echo "git pull failed"; exit 1; }
+    git pull || { echo "lede git pull failed"; exit 1; }
 else
     echo "repo dir not exists"
-    git clone "https://github.com/coolsnowwolf/lede.git" || { echo "git clone failed"; exit 1; }
+    git clone --depth=1 https://github.com/coolsnowwolf/lede.git || {
+        echo "lede clone failed, use ghproxy"
+        git clone --depth=1 https://mirror.ghproxy.com/https://github.com/coolsnowwolf/lede.git
+    }
     cd lede
 fi
 #cat ../m28c.config > .config
@@ -23,14 +26,24 @@ if [ -d "package/zz/luci-theme-alpha" ]; then
     git pull || { echo "luci-theme-alpha git pull failed"; exit 1; }
     cd ../../..
 else
-    git clone https://github.com/derisamedia/luci-theme-alpha.git package/zz/luci-theme-alpha || { echo "luci-theme-alpha git clone failed"; exit 1; }
+    git clone --depth=1 https://github.com/derisamedia/luci-theme-alpha.git package/zz/luci-theme-alpha || {
+        echo "theme clone failed, use ghproxy"
+        git clone --depth=1 https://mirror.ghproxy.com/https://github.com/derisamedia/luci-theme-alpha.git package/zz/luci-theme-alpha
+    }
 fi
 
 # 添加OpenAppFilter
 if [ -d "package/OpenAppFilter" ]; then
     cd package/OpenAppFilter
-    git pull || { echo "OpenAppFilter git pull failed"; exit 1; }
+    git pull || { echo "OAF git pull failed"; exit 0; }
     cd ../../
 else
-    git clone https://github.com/destan19/OpenAppFilter.git package/OpenAppFilter || { echo "OpenAppFilter git clone failed"; exit 1; }
+    git clone --depth=1 https://github.com/destan19/OpenAppFilter.git package/OpenAppFilter || {
+        echo "OAF clone failed, use ghproxy mirror"
+        git clone --depth=1 https://mirror.ghproxy.com/https://github.com/destan19/OpenAppFilter.git package/OpenAppFilter
+    }
 fi
+
+# 更新feeds
+./scripts/feeds update -a
+./scripts/feeds install -a
