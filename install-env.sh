@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 id
 apt-get update -y
 apt-get install -y ack antlr3 asciidoc autoconf automake autopoint binutils bison build-essential \
