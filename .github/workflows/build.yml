@@ -36,6 +36,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Setup environment
         run: |
+          chmod +x install-env.sh
           sudo ./install-env.sh
       - name: Prepare
         run: |
