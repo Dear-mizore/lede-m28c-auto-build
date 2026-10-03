@@ -46,6 +46,25 @@ jobs:
         run: |
           chmod +x prepare.sh
           ./prepare.sh
+
+      # =========【新增】屏蔽 SSR Plus =========
+      - name: Disable SSR Plus
+        run: |
+          CONFIG_FILE="lede/.config"
+          if [ ! -f "$CONFIG_FILE" ]; then
+            CONFIG_FILE=".config"
+          fi
+          touch "$CONFIG_FILE"
+          # 删除所有 ssr-plus 相关行
+          sed -i '/ssr-plus/d' "$CONFIG_FILE"
+          # 显式关闭
+          echo '# CONFIG_PACKAGE_luci-app-ssr-plus is not set' >> "$CONFIG_FILE"
+          echo '# CONFIG_DEFAULT_luci-app-ssr-plus is not set' >> "$CONFIG_FILE"
+          # 关闭相关依赖（如不需要）
+          echo '# CONFIG_PACKAGE_shadowsocksr-libev is not set' >> "$CONFIG_FILE"
+          echo '# CONFIG_PACKAGE_simple-obfs is not set' >> "$CONFIG_FILE"
+          echo '# CONFIG_PACKAGE_trojan is not set' >> "$CONFIG_FILE"
+
       - name: Cache OpenWrt dl and toolchain
         uses: actions/cache@v3
         if: always()
